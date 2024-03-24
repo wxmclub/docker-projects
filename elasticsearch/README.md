@@ -7,30 +7,31 @@ Elasticsearch 是一个分布式、RESTful 风格的搜索和数据分析引擎�
 ### 1.1 使用命令行方式部署
 
 ```bash
-# 创建 Network: netes7
-docker network create netes7
+# 创建 Network: netes8
+docker network create netes8
 
 # elasticsearch
 ## 启动容器
-docker run -d --name es79 --net netes7 -p 9200:9200 -p 9300:9300 -e "discovery.type=single-node" --restart=always elasticsearch:7.9.3
+docker run -d --name elasticsearch_8_12 --net netes8 -p 9200:9200 -p 9300:9300 -e "discovery.type=single-node" -e "xpack.security.enabled=false" --restart=always wxmclub/elasticsearch-ext:8.12.2
 ## 进入容器
-docker exec -it es79 bash
+docker exec -it elasticsearch_8_12 bash
 
 # kibana
 ## 启动容器
-docker run -d --name kibana79 --net netes7 -p 5601:5601 --link es79 -e "ELASTICSEARCH_HOSTS=http://es79:9200" --restart=always kibana:7.9.3
+docker run -d --name kibana_8_12 --net netes8 -p 5601:5601 --link elasticsearch_8_12 -e "ELASTICSEARCH_HOSTS=http://elasticsearch_8_12:9200" --restart=always kibana:8.12.2
 ## 进入容器
-docker exec -it kibana79 bash
+docker exec -it kibana_8_12 bash
 ```
 
 ### 1.2 使用 compose 方式部署
 
 ```bash
 # 部署命令
-docker-compose -f es79-docker-compose.yaml up -d
-
+docker-compose -f es-8.12-single.yaml up -d
 # 查看启动日志
-docker-compose -f es79-docker-compose.yaml logs -f
+docker-compose -f es-8.12-single.yaml logs -f
+# 移除部署
+docker-compose -f es-8.12-single.yaml down
 ```
 
 ## 2. 扩展
@@ -39,7 +40,7 @@ docker-compose -f es79-docker-compose.yaml logs -f
 
 ```bash
 # 进入容器
-docker exec -it es79 /bin/bash
+docker exec -it elasticsearch_8_12 /bin/bash
 
 # 切换路径到plugins下
 cd plugins
@@ -47,17 +48,17 @@ cd plugins
 mkdir ik
 cd ik
 # 下载文件，版本要与es一致
-curl -O https://github.com/medcl/elasticsearch-analysis-ik/releases/download/v7.9.3/elasticsearch-analysis-ik-7.9.3.zip
-# docker cp elasticsearch-analysis-ik-7.9.3.zip es79:/usr/share/elasticsearch/plugins/ik
+curl -O https://github.com/infinilabs/analysis-ik/releases/download/v8.12.2/elasticsearch-analysis-ik-8.12.2.zip
+# docker cp elasticsearch-analysis-ik-8.12.2.zip elasticsearch_8_12:/usr/share/elasticsearch/plugins/ik
 # 等待下载完成后 解压
-unzip elasticsearch-analysis-ik-7.9.3.zip
+unzip elasticsearch-analysis-ik-8.12.2.zip
 ## 把解压文件elasticsearch下的全部内容移动到当前目录
 #mv elasticsearch/* .
 # 这时候就可以重启容器了 先退出
 exit
 
 # 重启容器
-docker restart es79
+docker restart elasticsearch_8_12
 ```
 
 - 测试结果
@@ -98,4 +99,23 @@ GET _analyze
     }
   ]
 }
+```
+
+### 2.2 关闭SSL认证
+
+> es8.0之后默认开启了SSL认证，通过url:`http://localhost:9200/`访问时会报错:`received plaintext http traffic on an https channel, closing connection`
+
+#### 2.2.1 改为通过`https`方式访问
+
+#### 2.2.2 修改配置文件关闭SSL
+
+* `/usr/share/elasticsearch/config/elasticsearch.yml`
+
+```yaml
+# 修改此配置为: false
+xpack.security.enabled: false
+```
+
+```bash
+sed -i 's/xpack.security.enabled: true/xpack.security.enabled: false/g' /usr/share/elasticsearch/config/elasticsearch.yml
 ```

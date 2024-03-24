@@ -6,8 +6,9 @@
 
 ```bash
 # 部署命令
-docker-compose -f mongo-4.4-single.yaml up -d
-
+docker-compose -f mongo-7.0-single.yaml up -d
 # 查看启动日志
-docker-compose -f mongo-4.4-single.yaml logs -f
+docker-compose -f mongo-7.0-single.yaml logs -f
+# 移除部署
+docker-compose -f mongo-7.0-single.yaml down
 ```

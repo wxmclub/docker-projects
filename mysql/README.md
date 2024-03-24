@@ -6,8 +6,9 @@
 
 ```bash
 # 部署命令
-docker-compose -f mysql-8.0-single.yaml up -d
-
+docker-compose -f mysql-8.3-single.yaml up -d
 # 查看启动日志
-docker-compose -f mysql-8.0-single.yaml logs -f
+docker-compose -f mysql-8.3-single.yaml logs -f
+# 移除部署
+docker-compose -f mysql-8.3-single.yaml down
 ```

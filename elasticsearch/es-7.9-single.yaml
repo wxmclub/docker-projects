@@ -1,9 +1,9 @@
 version: '3'
 services:
-  es79:
-    image: elasticsearch:7.9.3
-    container_name: es79
-    restart: always
+  elasticsearch_7_9:
+    image: wxmclub/elasticsearch-ext:7.9.3
+    container_name: elasticsearch_7_9
+    #restart: always
     networks:
       - netes7
     ports:
@@ -11,20 +11,20 @@ services:
       - 9300:9300
     environment:
       - discovery.type=single-node
-  kibana79:
+  kibana_7_9:
     image: kibana:7.9.3
-    container_name: kibana79
-    restart: always
+    container_name: kibana_7_9
+    #restart: always
     networks:
       - netes7
     depends_on:
-      - es79
+      - elasticsearch_7_9
     links:
-      - es79
+      - elasticsearch_7_9
     ports:
       - 5601:5601
     environment:
-      - ELASTICSEARCH_HOSTS=http://es79:9200
+      - ELASTICSEARCH_HOSTS=http://elasticsearch_7_9:9200
 networks:
   netes7:
     driver: bridge

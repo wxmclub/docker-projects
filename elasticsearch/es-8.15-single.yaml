@@ -1,8 +1,8 @@
 version: '3'
 services:
-  elasticsearch_8_12:
-    image: wxmclub/elasticsearch-ext:8.12.2
-    container_name: elasticsearch_8_12
+  elasticsearch_8_15:
+    image: wxmclub/elasticsearch-ext:8.15.1
+    container_name: elasticsearch_8_15
     #restart: always
     networks:
       - netes8
@@ -12,20 +12,20 @@ services:
     environment:
       - discovery.type=single-node
       - xpack.security.enabled=false #关闭SSL认证
-  kibana_8_12:
-    image: kibana:8.12.2
-    container_name: kibana_8_12
+  kibana_8_15:
+    image: kibana:8.15.1
+    container_name: kibana_8_15
     #restart: always
     networks:
       - netes8
     depends_on:
-      - elasticsearch_8_12
+      - elasticsearch_8_15
     links:
-      - elasticsearch_8_12
+      - elasticsearch_8_15
     ports:
       - 5601:5601
     environment:
-      - ELASTICSEARCH_HOSTS=http://elasticsearch_8_12:9200
+      - ELASTICSEARCH_HOSTS=http://elasticsearch_8_15:9200
 networks:
   netes8:
     driver: bridge

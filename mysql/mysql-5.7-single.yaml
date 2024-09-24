@@ -9,3 +9,6 @@ services:
       - 3307:3306
     environment:
       MYSQL_ROOT_PASSWORD: 123
+    volumes:
+      - /data/docker/mysql_5_7/data:/var/lib/mysql
+      - /data/docker/mysql_5_7/log:/var/log/mysql

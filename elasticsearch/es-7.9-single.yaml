@@ -11,6 +11,7 @@ services:
       - 9300:9300
     environment:
       - discovery.type=single-node
+      - _JAVA_OPTIONS=-XX:UseSVE=0 #macOS 15.2 M4: Unable to launch Elasticsearch Docker container #118583 https://github.com/elastic/elasticsearch/issues/118583#issuecomment-2567270484
   kibana_7_9:
     image: kibana:7.9.3
     container_name: kibana_7_9

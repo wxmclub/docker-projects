@@ -1,7 +1,7 @@
 version: '3'
 services:
   elasticsearch_8_15:
-    image: wxmclub/elasticsearch-ext:8.15.1
+    image: wxmclub/elasticsearch-ext:8.15.5
     container_name: elasticsearch_8_15
     #restart: always
     networks:
@@ -12,8 +12,10 @@ services:
     environment:
       - discovery.type=single-node
       - xpack.security.enabled=false #关闭SSL认证
+      - TZ=Asia/Shanghai
+      - _JAVA_OPTIONS=-XX:UseSVE=0 #macOS 15.2 M4: Unable to launch Elasticsearch Docker container #118583 https://github.com/elastic/elasticsearch/issues/118583#issuecomment-2567270484
   kibana_8_15:
-    image: kibana:8.15.1
+    image: kibana:8.15.5
     container_name: kibana_8_15
     #restart: always
     networks:

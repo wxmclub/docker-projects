@@ -12,13 +12,13 @@ docker network create netes8
 
 # elasticsearch
 ## 启动容器
-docker run -d --name elasticsearch_8_15 --net netes8 -p 9200:9200 -p 9300:9300 -e "discovery.type=single-node" -e "xpack.security.enabled=false" --restart=always wxmclub/elasticsearch-ext:8.15.1
+docker run -d --name elasticsearch_8_15 --net netes8 -p 9200:9200 -p 9300:9300 -e "discovery.type=single-node" -e "xpack.security.enabled=false" -e _JAVA_OPTIONS="-XX:UseSVE=0" --restart=always wxmclub/elasticsearch-ext:8.15.5
 ## 进入容器
 docker exec -it elasticsearch_8_15 bash
 
 # kibana
 ## 启动容器
-docker run -d --name kibana_8_15 --net netes8 -p 5601:5601 --link elasticsearch_8_15 -e "ELASTICSEARCH_HOSTS=http://elasticsearch_8_15:9200" --restart=always kibana:8.15.1
+docker run -d --name kibana_8_15 --net netes8 -p 5601:5601 --link elasticsearch_8_15 -e "ELASTICSEARCH_HOSTS=http://elasticsearch_8_15:9200" --restart=always kibana:8.15.5
 ## 进入容器
 docker exec -it kibana_8_15 bash
 ```
@@ -50,10 +50,10 @@ cd ik
 # 下载文件，版本要与es一致
 # https://github.com/infinilabs/analysis-ik
 # https://release.infinilabs.com/
-curl -O https://release.infinilabs.com/analysis-ik/stable/elasticsearch-analysis-ik-8.15.1.zip
-# docker cp elasticsearch-analysis-ik-8.15.1.zip elasticsearch_8_15:/usr/share/elasticsearch/plugins/ik
+curl -O https://release.infinilabs.com/analysis-ik/stable/elasticsearch-analysis-ik-8.15.5.zip
+# docker cp elasticsearch-analysis-ik-8.15.5.zip elasticsearch_8_15:/usr/share/elasticsearch/plugins/ik
 # 等待下载完成后 解压
-unzip elasticsearch-analysis-ik-8.15.1.zip
+unzip elasticsearch-analysis-ik-8.15.5.zip
 ## 把解压文件elasticsearch下的全部内容移动到当前目录
 #mv elasticsearch/* .
 # 这时候就可以重启容器了 先退出
